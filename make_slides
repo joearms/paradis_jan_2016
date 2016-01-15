@@ -1,0 +1,9 @@
+#!/bin/sh
+
+erl -pa './src' -s orgmode_parse transform $1 -s init stop
+out=`basename $1 .org`
+file="lecture_${out}.tex"
+echo "output=${file}"
+pdflatex $file
+pdflatex $file
+

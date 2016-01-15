@@ -1,0 +1,11 @@
+
+1) After checkout from git
+   > ./build
+
+2) total clean
+   > make very_clean
+   
+   Note very_clean removes the Makefile
+
+3) partial clean
+  >  make clean

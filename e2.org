@@ -1,0 +1,353 @@
+#+STARTUP: overview, hideblocks
+#+BEGIN_kv
+title: Sequential Erlang 
+subtitle: Lecture E2
+author: Joe Armstrong
+copyright: \copyright 2016 -- Joe Armstrong
+email: joearms@gmail.com
+affiliation: KTH, Whoomph Software AB
+process: orgmode_plugin_slides
+#+END_kv
+
+* Starting the shell
+
+** Mac OX-S, *nix:
+
+\verb+> erl+
+
+** Windows:
+
+\verb+Programs -> OTP ... -> Erlang+
+
+
+#+BEGIN_shell
+$ erl
+Erlang (BEAM) emulator version 5.5.4 [source] 
+  [async-threads:0] [kernel-poll:false]
+Eshell V5.5.4  (abort with ^G)
+1> 1 + 2 * 3.
+7
+#+END_shell
+
+* Stopping the shell
+
+** \verb|(ctrl)+\| -- immediate exit
+** \verb+init:stop()+ -- controlled exit
+** \verb+erlang:halt()+ -- uncontrolled exit
+** \verb|(ctrl)+C|
+
+#+BEGIN_shell
+BREAK: (a)bort (c)ontinue (p)roc info (i)nfo 
+       (l)oaded (v)ersion (k)ill (D)b-tables 
+       (d)istribution
+a
+#+END_shell
+
+* Shell commands
+
+** Shell is \verb+read-eval-print+ loop.
+** Commands end \verb+.+\textcolor{Red}{WS}.
+** Repeated prompt means command is not yet finished:
+
+#+BEGIN_shell
+1> 12234 * 12313.
+150637242
+2> math:sqrt(2).
+1.41421
+3> [123, abc,"hello"].
+[123,abc,"hello"]
+4> 1234 +
+4> 34524249 *
+4> 11112231.
+383641429990753
+#+END_shell
+
+* Using the shell
+** REPL (Read Eval Print Loop) is typical for this type of language.
+** Same of all platforms (good for windows).
+** A session: \textcolor{Red}{Show this}:
+
+#+BEGIN_shell
+$erl
+...
+1> X = 23+10.
+33
+2> X + X.
+66
+...
+#+END_shell
+   
+** \textcolor{Red}{All expressions end in ``.''}.
+** Quit with \verb+q()+ or \verb+^C+.
+** Emacs conventions apply in the shell.
+
+* Variables don't vary
+
+** \textcolor{Red}{Variable start with an uppercase letter} and are bound with =:
+
+#+BEGIN_shell
+$erl
+...
+1> X = 10.
+10
+2> X = 20.
+  exception error: 
+   no match of right hand side value 20
+...
+3> X1 = 20.
+20
+#+END_shell
+
+** Use a new variable each time (more later)
+
+* Data Types
+Erlang has two types of data.
+There are {\sl Primitive data types} (atoms, integers, floats) etc. and
+{\sl Compound data types}. Compound data types glue together 
+data. The two most common forms of glue are {\sl Lists} and
+{\sl Tuples}. Records provide syntactic sugar for accessing tuples.
+{\sl maps} are associative Key-Value stores.
+
+#+BEGIN_shell
+> X = abc.
+abc
+> Y = 123.
+123
+> L = [abc,123].
+[abc,123]
+> M = [xyz,L,1234].
+[xyz,[abc,123],1234]
+#+END_shell
+
+* Strings
+** There are no strings in Erlang.
+** Strings are lists of integers:
+#+BEGIN_shell
+1> "abc".
+"abc".
+2> [abc|"abc"].
+[abc,97,98,99]
+#+END_shell
+
+* Primitive Data Types
+
+** Atoms \verb+monday+ \verb+tuesday+ - \textcolor{Red}{Remember atoms start with a lower case letters}.
+** Booleans \verb+true+ \verb+false+.
+** Integers 123, 213091038018301830810381038018, 16\#f234, 2\#23, \$a:
+
+#+BEGIN_shell
+> x = abc.
+  exception error: 
+  no match of right hand side value abc
+> x = x.
+x
+#+END_shell
+
+* Numbers
+** Integers:
+
+#+BEGIN_sublist
+1234 
+27391836713581739719319837917391739173218361836
+16\#ca23ad12 -- hex
+2\#1010101   -- base 2
+N\#DDDDD     -- base N
+\$a (asci code for a = 97)
+#+END_sublist
+
+
+** Floats.
+** Atoms:
+
+#+BEGIN_sublist
+Booleans \verb+true+, \verb+false+
+Constants \verb+monday+, \verb+tuesday+
+#+END_sublist
+
+* Compound Data (Lists)
+
+** Lists are containers for a \textcolor{red}{variable} number of items.
+** \verb+X = [1,2,3,abc,true]+ - Even complex items can be in the list.
+** \verb+[Head|Tail]+ is used to construct or deconstruct a list:
+
+#+BEGIN_shell
+> L = [1,2,3,4].
+[1,2,3,4]
+> [H|T] = [1,2,3,4].
+[1,2,3,4]
+> H.
+1
+> T.
+[2,3,4]
+#+END_shell
+
+* Constructing a list
+#+BEGIN_shell
+> T = [1,2,3].
+[1,2,3]
+> H = a.
+a
+> [H|T].
+[a,1,2,3]
+#+END_shell
+  
+* What is a list (really)
+
+** It's a cons cell in LISP.
+** It's ``linked list'' in C.
+
+* Tuples
+
+** Tuples are containers for a \textcolor{red}{fixed} number of items:
+
+#+BEGIN_shell
+> X = {1,2,3}.
+{1,2,3}.
+> {_,Y,_} = X.
+{1,2,3}.
+> Y.
+2
+#+END_shell
+
+* Patterns
+
+** A ``Term'' is an atomic or compound data value.
+** A ``Pattern'' is a data value or a variable.
+** Variables are bound in pattern matching operations:
+
+#+BEGIN_shell
+> X = {1,2,1}.
+{1,2,1}
+> {Z,A,Z} = X. ???
+> {P,Q,R} = X. ???
+...
+#+END_shell
+
+** If variables are repeated in a pattern then they must bind to the same value.
+** \verb+_+ is a wildcard (matches anything).
+
+* Unpacking  a list
+
+#+BEGIN_shell
+> L = [1,2,3,4].
+[1,2,3,4]
+> [H|T] = L.
+[1,2,3,4]
+> H.
+1
+> T.
+[2,3,4]
+#+END_shell
+
+** \textcolor{red}{Show lot's of examples}.  
+* Functions
+
+** Multiple Entry Points
+
+#+BEGIN_erlang
+area({square,X}) -> X*X;
+...
+area({rectangle,X,Y}) -> X*Y.
+#+END_erlang
+  
+** C/Javascript/... have single entry points so don't write:
+
+\begin{Verbatim}
+function area(X){
+   if(X.type == 'square'){
+      ...
+   } elseif{X.type='rectangle'){
+      ...
+}
+\end{Verbatim}
+
+* Modules
+** All code is defined in modules.
+** Modules are the unit of compilation.
+** Modules can live-upgraded.
+** Modules limit the visibility of internal functions.
+* Structure of a Module
+** Modules look like this:
+#+BEGIN_erlang
+-module(math1).
+-export([area/1]). 
+
+area({square,X}) -> X*X;
+area({rectangle,X,Y}) -> X*Y.
+#+END_erlang
+** The filename \textcolor{red}{must} be \verb+math1.erl+:
+#+BEGIN_shell
+$ erl
+1> c(math1).
+{ok,math1}
+2> math1:area({square,12}).
+144
+#+END_shell
+* Punctuation
+** DOT whitespace ends a function.
+** Semicolon ``;'' separates clauses.
+** Comma ``,'' separates arguments.
+** Getting the punctuation wrong is the single biggest mistake beginners make.
+** Use a text editor that matches parentheses.
+ 
+* Add Unit tests
+** Add unit test like this:
+#+BEGIN_erlang
+-module(math2).
+-export([test/0, area/1]). 
+
+test() ->
+    144 = area({square,12}),
+    200 = area({rectangle,10,20}),
+    hooray.
+
+area({square,X}) -> X*X;
+area({rectangle,X,Y}) -> X*Y.
+#+END_erlang
+
+* Exports
+#+BEGIN_erlang
+-module(mod1).
+-export([func1/2, func3/2]). %% public stuff
+
+func1(X, Y) ->    %% A public function
+   boo(X, Y, 12).
+
+boo(X, Y, X) ->   %% A private function
+   ...
+#+END_erlang
+
+** Cheat \verb+-compile(export_all).+
+
+* Imports
+
+** Imports permit a short form of the calling sequence.
+** Late Binding - always calls the latest version of the code:
+
+#+BEGIN_erlang
+-module(mod1).
+-import(lists, [reverse/1]).
+
+func1(L) ->
+   L1 = reverse(L). %% it's really lists:reverse
+#+END_erlang
+
+** Cheat \verb+-compile(export_all).+
+* Assignments
+
+Fetch the files \verb_bad_code1.erl+ and \verb+bank.erl+
+
+#+BEGIN_erlang
+-module(bad_prog1).
+...
+#+END_erlang
+
+\verb+bad_code1.erl+ has a horrendous number of errors. Fix all the
+errors.
+
+\verb+bank.erl+ is a partially complete program. Fix it as described
+in the problem set description (hint: base your code on the
+code patterns you find in \verb+e1.erl+
+
+
+

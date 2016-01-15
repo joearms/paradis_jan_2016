@@ -1,0 +1,121 @@
+\documentclass[12pt]{hitec}
+
+\usepackage{fancyvrb}
+%% \usepackage{hyperref}
+
+\title{Problem set 1}
+\author{Joe Armstrong}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+These problems are for lectures E1 and E2.
+
+Additional material can be found in the course book
+{\sl Programming Erlang, 2'nd edition}.
+
+\section{Problems}
+
+The first exercises involve correcting
+incorrect programs. The program \verb+bad_prog1.erl+ in my github repository
+\newline
+\verb+http://joearms.github.com/paradis_2016/src/bad_prog1.erl+ has a
+large number of errors.
+
+\VerbatimInput[frame=single]{code/bad_prog1.erl}
+
+Correct all the errors that you can find.  Write unit
+tests\footnote{See the note on unit tests.}  for this module and run
+these tests.
+
+See how many errors you can find {\sl before} running this through the
+compiler.
+
+Hint: Read the error messages - correct the first error and recompile
+before tackling the second error. Having fixed the first error the
+error messages that the compiler generates may change of subsequent
+recompilation.
+
+As you get experienced look at only the line number in the error
+message then try to see the error in your code at this line without
+reading the remainder of the diagnostic.
+
+Note: Good programs should have good documentation and
+comments. Correct the comments as well as the code, and document the
+module in an appropriate manner.
+
+
+
+\section{A bank account}
+
+The follow program implements a simple bank process, where the code
+you have to write has been replaced by the atom \verb+implement_this+.
+
+Replace the \verb+implement_this+ atoms by correct code. 
+
+\VerbatimInput[frame=single]{code/bank.erl}
+
+When your program works the unit test \verb+bank:test()+ should
+evaluate to \verb+horray+
+
+Look at the code in \verb+e1.erl+ for inspiration.
+
+\section{Advanced: Many bank account}
+
+The previous bank account was for one person only. Implement a module
+\verb+multi_bank.erl+ that handles bank accounts for many
+people. You'll have to add an additional argument \verb+Who+ to all
+the fucntions in the API, so for example where \verb+bank.erl+ exports
+\verb+add(Pid, X)+ \verb+multi_bank.erl+ would have a function
+\verb+add(Pid, Who, X)+ where \verb+Who+ is a person name (for example, the
+atom \verb+joe+).
+
+Add an additional function \verb+lend(Pid, From, To, Ammount)+ to
+transfer money between bank accounts of the people \verb+From+ and \verb+To+.
+
+\section{Unit Tests}
+
+Here's an example of a simple module, containing a test function \verb+test()+.
+
+\VerbatimInput[frame=single]{code/math0.erl}
+
+The unit tests are in the body of the function \verb+test()+. To run the tests
+we proceed as follows:
+
+\begin{verbatim}
+> erl
+Eshell V7.1  (abort with ^G)
+1> c(math0).
+{ok,math0}
+2> math0:test().
+horray
+\end{verbatim}
+
+Here we have used pattern matching to test the return values of the function.
+The line:
+\begin{verbatim}
+24 = fac(4)
+\end{verbatim}
+
+will fail with a pattern matching error if \verb+fac(4)+ does not return  \verb+24+
+(which is the value of factorial 4.
+
+If we call \verb+fac(N)+ with an argument that is not an integer the function
+should raise an exception. We can test that it has throw an exception with a
+statement like:
+
+\begin{verbatim}
+  {'EXIT', _} = (catch fac(X))
+\end{verbatim}
+
+In a later lecture I'll talk about catching exceptions, but for now all you need
+to know is that \verb+catch(F(X))+ traps errors occurring during the evaluation
+of \verb+F(X)+ converting them to error tuples of the form \verb+{'EXIT', Why}+
+which we match with the pattern \verb+{'EXIT', _}+.
+
+\end{document}
+

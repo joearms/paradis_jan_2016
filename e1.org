@@ -1,0 +1,387 @@
+#+STARTUP: overview, hideblocks
+#+BEGIN_kv
+title: Concurrent Programming with 3 primitives
+subtitle: Lecture E1 
+author: Joe Armstrong
+copyright: \copyright 2016 -- Joe Armstrong
+email: joearms@gmail.com
+affiliation: KTH, Whoomph Software AB
+process: orgmode_plugin_slides
+#+END_kv
+
+* About
+
+** Assignments and other material are at \url{https://github.com/joearms/paradis_2016}.
+** PDF files and assignments are at the course site on ilearn2.
+** It's a GIT repository. Please push changes to me. {\sl help me improve the course better}.
+   
+* Help me improve the course
+
+** We start with a emacs org-mode, this file is \verb+e1.org+.
+** An Erlang program \verb+orgmode_parse.erl+ transforms it into \verb+lecture_e1.tex+. This adds color coding of code and a few other nice things.
+** Run \verb+pdflatex+ twice and get \verb+lecture_e1.pdf+.
+** This course is being continuously updated and is possibly buggy.
+** Please help me improve the material. Push all changes to github.
+** There are no course credits for helping.
+** \textcolor{Red}{Tell me if the examples are too easy or difficult}. They should take N hours/week. What is N?
+
+* Building the Course Material
+#+BEGIN_shell
+$ git clone https://github.com/joearms/paradis_2015
+$ cd paradis_2016/
+$ autoconf
+$ ./configure
+$ make
+#+END_shell
+
+Problem 1 - fix Makefile.in or configure.ac to reduce output from pdflatex.
+ 
+  
+* Content
+** Course book {\sl Programming Erlang}.
+** There are one set of slides per lecture and one set of problems per week.
+** The lectures have a lot of live coding (not in the slides).
+** You get out of the course what you put into it. 
+** Warn me if I drift off topic :-) {\sl we can always talk after the lectures}.
+   
+* How to learn any programming language
+** Get a working example.
+** Mutate it line at a time.
+** Minimise it of all the essental ingredients.
+** Make small changes to a working program.
+** Test often.
+   
+* Let's get started
+	
+#+BEGIN_image
+height:10cm
+image:Erlang.jpg
+title:Agner Krarup Erlang (1878 - 1929)
+#+END_image
+  
+* Erlang
+
+** Erlang was designed for building {\bf fault-tolerant}, {\bf concurrent}, {\bf scaleable} applications.
+** The world {\sl is} concurrent.
+** Erlang belongs to the {\bf actor} family of languages. There are two types of concurrency:
+** Shared-Memory Concurrency
+** Message Passing Concurrency - Sending and receiving messages is the only way for processes to exchange data.
+** We never know if a message is received (it might get lost on the way) - If you want to know if a message has been received then send a reply.
+** Message passing is ``Location transparent'' (like sending letter in the mail).
+   
+* Erlang 
+
+** ``Functional'' core.
+** ``Math'' variables.
+** \textcolor{red}{Beautiful syntax}.
+** No mutable data (not really true).
+** Concurrency (and parallelism) is built-in.
+** Inbuilt fault-tolerance.
+** Modules.
+** Not OO (Actors).
+** Practical.
+** Battle Tested (not a theory).
+
+* Starting the shell (REPL)
+
+** Mac OX-S, *nix:
+
+\verb+> erl+
+
+** Windows:
+
+\verb+Programs -> OTP ... -> Erlang+
+
+
+#+BEGIN_shell
+$ erl
+Erlang (BEAM) emulator version 5.5.4 [source] 
+  [async-threads:0] [kernel-poll:false]
+Eshell V5.5.4  (abort with ^G)
+1> 1 + 2 * 3.
+7
+#+END_shell
+
+* Stopping the shell
+
+** \verb|(ctrl)+\| -- immediate exit.
+** \verb+init:stop()+ -- controlled exit.
+** \verb+erlang:halt()+ -- uncontrolled exit.
+** \verb|(ctrl)+C|.
+
+#+BEGIN_shell
+BREAK: (a)bort (c)ontinue (p)roc info (i)nfo 
+       (l)oaded (v)ersion (k)ill (D)b-tables 
+       (d)istribution
+a
+#+END_shell
+
+* e1.erl
+#+BEGIN_erlang
+tests() ->
+    1000 = fac(1000) div fac(999),
+    20 = demo1(),
+    20 = double(10),
+    36 = area({square,6}),
+    60 = perimeter({rectangle,10,20}),
+    200 = area1({rectangle,10,20}),
+    Pid1 = spawn(fun() -> area_actor() end),
+    Pid1 ! {rectangle, 10, 20},
+    Pid2 = spawn(fun() -> area_server() end),
+    200 = rpc(Pid2, {rectangle,10,20}),
+    Pid3 = spawn(fun() -> universal() end),
+    Cubed = fun(X) -> X*X*X end,
+    Pid3 ! {become, Cubed},
+    8 = rpc(Pid3, 2),
+    K1 = sum_squares_fast(1000),
+    K1 = sum_squares_slow(1000),
+    ok.
+#+END_erlang
+* fac
+This file is \verb+e1.erl+
+#+BEGIN_erlang
+-module(e1).
+-compile(export_all).
+
+fac(0) -> 1;
+fac(N) -> N*fac(N-1).    
+#+END_erlang
+#+BEGIN_shell
+$ erl
+Erlang/OTP 18 [erts-7.1] [source] ...
+Eshell V7.1  (abort with ^G)
+1> c(e1).
+{ok,e1}
+2> e1:fac(10).
+3628800
+#+END_shell
+
+* fac with unit test
+This file is \verb+e0.erl+
+#+BEGIN_erlang
+-module(e1).
+-compile(export_all).
+
+test_fac() ->
+    24 = fac(4),
+    horray.
+
+fac(0) -> 1;
+fac(N) -> N*fac(N-1).    
+#+END_erlang
+#+BEGIN_shell
+$ erl
+Erlang/OTP 18 [erts-7.1] [source] ...
+Eshell V7.1  (abort with ^G)
+1> c(e1).
+{ok,e1}
+2> e1:test_fac().
+horray.
+#+END_shell
+
+* Double using a fun
+#+BEGIN_erlang
+demo1() ->
+    Double = fun(X) -> 2*X end,
+    Double(10).
+#+END_erlang
+
+* Variables
+** Begin with an uppercase letter Var,X,Y,Z.
+** First occurrence is the {\sl binding occurrence}.
+** Second occurrence is the {\sl matching occurrence}.
+* = is NOT equals
+  
+#+BEGIN_erlang
+test() ->
+    Double = fun(X) -> 2*X end,  // bind
+    20 = Double(10).             // match
+
+    {X,Y,Z} = {1,2,3} // bind
+    {P, X} = {23,1}   // match which succeeds
+                      // only P is bound
+#+END_erlang
+
+\verb+Pattern = Expression+ means evaluate \verb+Expression+ and see
+if it matches \verb+Pattern+.
+
+More in the next lecture - {\sl don't worry if you don't understand
+this now I'll explain as we go along.}
+
+* Matching examples
+#+BEGIN_erlang
+
+1> {X,Y,Z} = {1,2,3}
+   yes X = 1, Y = 2, Z = 3
+
+2> {A,B,A} = {1,2,1}
+   yes A = 1, B = 2
+
+3> {C,D,C} = {1,2,3}
+   NO C cannot be 1 and 3 at the same time
+   D has no value
+   
+4> {P,Q,R} = {1,2}
+   NO different shape
+
+5> {A,Y} = {1,2}
+   YES A is indeeded 1 etc. - this is a Match not a bind
+
+6> {X,P} = {1,2} 
+   ...
+
+#+END_erlang
+
+* All control flow is determined by patterns
+
+#+BEGIN_erlang
+someFuncName(Pattern1) -> Action1
+someFuncName(Pattern2) -> Action2
+...
+
+case X of
+   Pattern1 -> Actions1
+   Pattern2 -> Actions2
+   ...
+end
+
+receive 
+   Pattern1 -> Actions1
+   Pattern2 -> Actions2
+   ...
+end
+#+END_erlang
+
+* Functions are defined using patterns
+
+#+BEGIN_erlang
+area({square,X}) -> X*X;
+area({rectangle,X,Y}) -> X*Y.
+
+perimeter({square,X}) ->  4*X;
+perimeter({rectangle,X,Y}) -> 2*(X+Y).
+#+END_erlang
+
+Or with a \verb+case+ statement:
+
+#+BEGIN_erlang
+area1(Arg) ->
+    case Arg of
+	{square, X} ->
+	    X*X;
+	{rectangle, X, Y} ->
+	    X*Y
+    end.
+#+END_erlang
+
+* A process
+
+#+BEGIN_erlang
+area_actor() ->
+    receive
+	{square, X} ->
+	    print(X*X);
+	{rectangle, X, Y} ->
+	    print(X*Y)
+    end,
+    area_actor().
+#+END_erlang
+
+Note the similarity with  the \verb+case+ statement :-)
+
+#+BEGIN_erlang
+area1(Arg) ->
+    case Arg of
+	{square, X} ->
+	    X*X;
+	{rectangle, X, Y} ->
+	    X*Y
+    end.
+#+END_erlang
+
+* Spawn send and receive 
+#+BEGIN_erlang
+area_actor() ->
+    receive
+	{square, X} ->
+	    print(X*X);
+	{rectangle, X, Y} ->
+	    print(X*Y)
+    end,
+    area_actor().
+#+END_erlang
+
+#+BEGIN_shell
+1> Pid = spawn(fun() -> e1:area_actor() end).
+<0.34.0>
+2> Pid ! {square,123}.
+15129
+{square,123}
+#+END_shell
+
+* Concurrent Programs
+
+Concurrent programs are constructed using three primitives:
+
+** \verb=spawn(Fun)= creates a parallel process that evaluates \verb=Fun=.
+** \verb=Pid ! M= sends a message \verb=M= to the mailbox of process \verb=Pid=.
+**  \verb=receive Pattern -> Expressions end= tries to retrieve a  message from the mailbox of the process. It is triggered whenever a  message is put in the mailbox.
+ 
+{\sl is it that easy?} -- Yes
+
+* Functions are first class objects
+
+#+BEGIN_erlang
+universal() ->	
+    receive
+	{become, F} -> universal(F)
+    end.
+
+universal(F) ->
+    receive
+	{From, X} ->
+	    From ! F(X),
+	    universal(F)
+    end.
+
+rpc(Pid, Msg) ->	
+    Pid ! {self(), Msg},
+    receive
+	Any -> Any
+    end.
+#+END_erlang
+
+#+BEGIN_shell
+> Pid3 = spawn(fun() -> universal() end),
+> Cubed = fun(X) -> X*X*X end,
+> Pid3 ! {become, Cubed},
+> 8 = rpc(Pid3, 2),
+#+END_shell
+
+* Roll your own control structures
+
+#+BEGIN_erlang
+for(Max,Max,F) -> [F(Max)];
+for(I, Max, F) -> [F(I)|for(I+1,Max,F)].
+#+END_erlang
+
+and create 10,000 parallel processes
+
+#+BEGIN_shell
+quares(Max) ->
+    Square = fun(X) -> X*X end,
+    Pids = for(1,Max,fun(_) ->
+			     Pid = spawn(fun() -> universal() end),
+			     Pid ! {become,Square},
+			     Pid
+		   end)
+#+END_shell
+
+* Make a million processes
+
+** \verb=erl +P 1000000 =
+
+and sum the squares from 1 to 1000000
+
+(see the {\sl stupid} program)
+
