@@ -1,0 +1,14 @@
+#!/bin/sh
+
+erl -pa '../src' -s orgmode_parse transform $1 -s init stop
+out=`basename $1 .org`
+file="../build/lecture_${out}.tex"
+echo "output=${file}"
+cd ../build
+pdflatex $file
+pdflatex $file
+echo "moving ${file}"
+pdf="lecture_${out}.pdf"
+echo "moving $pdf to lectures"
+mv ${pdf} ../lectures
+

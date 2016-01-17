@@ -1,16 +1,15 @@
 # paradis_jan_2016
 course notes
 
-> make
-  to make
-> make clean
-  leave the PDF undeleted
+targets
 
-> make very_clean
-  Maximal cleanup
-  done before first git checkin
-  to cean the system as much as possible
+   make
 
-> ./build
-  does after a git checkout (once only)
-  
+   make clean
+
+src - src directory
+lectures - inputs
+build - temp directoy to buld things in
+
+Most active work is done in the `lectures` directory.
+Files in the other directory should be left alone

@@ -8,7 +8,7 @@
 %% $email
 %% $affiliation
 
-\usepackage{sslides}
+\usepackage{../src/sslides}
 \usepackage{listings}
 
 \definecolor{shellcolor}{rgb}{.9, .9, .9}
@@ -80,7 +80,7 @@
 \def\nameFooter{\nameTitle}
 \def\placeAndDayFooter{\placeAndDayTitle}
 
-\usepackage{fancyheadings}
+\usepackage{../src/fancyheadings}
 \pagestyle{fancy}
 
 % header

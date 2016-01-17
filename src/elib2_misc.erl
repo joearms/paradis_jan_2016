@@ -1,6 +1,6 @@
 %% Copyright (c) 2006-2009 Joe Armstrong
 %% See MIT-LICENSE for licensing information.
-%% Time-stamp: <2014-02-07 08:53:02 joe>
+%% Time-stamp: <2016-01-17 16:20:34 joearmstrong>
 
 -module(elib2_misc).
 
@@ -1484,7 +1484,7 @@ priority_receive() ->
 -spec random_seed() -> void.
 
 random_seed() ->
-    {_,_,X} = erlang:now(),
+    {_,_,X} = os:timestamp(),
     {H,M,S} = time(),
     H1 = H * X rem 32767,
     M1 = M * X rem 32767,
@@ -1676,7 +1676,7 @@ spawn_monitor(Term, true, Fun) ->
 spawn_monitor_starter(Term, Fun) ->
     S = self(),
     io:format("process:~p started at:~p ~p~n",
-	      [self(), erlang:now(), Term]),
+	      [self(), os:timestamp(), Term]),
     Monitor = spawn_link(fun() -> spawn_monitor1(Term, S) end),
     receive
 	{Monitor, ready} ->
@@ -1689,7 +1689,7 @@ spawn_monitor1(Term, Parent) ->
     receive
 	{'EXIT', Parent, Why} ->
 	    io:format("process:~p dies at:~p ~p reason:~p~n",
-		      [self(), erlang:now(), Term, Why])
+		      [self(), os:timestamp(), Term, Why])
     end.
 
 %%----------------------------------------------------------------------

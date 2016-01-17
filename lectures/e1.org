@@ -55,7 +55,7 @@ Problem 1 - fix Makefile.in or configure.ac to reduce output from pdflatex.
 	
 #+BEGIN_image
 height:10cm
-image:Erlang.jpg
+image:../lectures/Erlang.jpg
 title:Agner Krarup Erlang (1878 - 1929)
 #+END_image
   

@@ -10,8 +10,8 @@ process(File, A0, Blocks) ->
     L = render(Blocks1, [], []),
     %% elib2_misc:dump("parsed.tmp", L),
     A = [{"slides", L}|A0],
-    Out = "lecture_" ++ Root ++ ".tex",
-    elib2_misc:expand_file_template("slides.template", A, Out),
+    Out = "../build/lecture_" ++ Root ++ ".tex",
+    elib2_misc:expand_file_template("../src/slides.template", A, Out),
     io:format("Created:~s~n",[Out]).
 
 pass1({block,"_kv",Str}) ->
