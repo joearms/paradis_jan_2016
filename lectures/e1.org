@@ -11,7 +11,7 @@ process: orgmode_plugin_slides
 
 * About
 
-** Assignments and other material are at \url{https://github.com/joearms/paradis_2016}.
+** Assignments and other material are at \url{https://github.com/joearms/paradis_jan_2016}.
 ** PDF files and assignments are at the course site on ilearn2.
 ** It's a GIT repository. Please push changes to me. {\sl help me improve the course better}.
    
