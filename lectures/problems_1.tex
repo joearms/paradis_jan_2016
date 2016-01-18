@@ -1,7 +1,7 @@
 \documentclass[12pt]{hitec}
 
 \usepackage{fancyvrb}
-%% \usepackage{hyperref}
+\usepackage{hyperref}
 
 \title{Problem set 1}
 \author{Joe Armstrong}
@@ -23,7 +23,10 @@ Additional material can be found in the course book
 The first exercises involve correcting
 incorrect programs. The program \verb+bad_prog1.erl+ in my github repository
 \newline
-\verb+http://joearms.github.com/paradis_2016/src/bad_prog1.erl+ has a
+\href{https://github.com/joearms/paradis\_jan\_2016/blob/master/lectures/bad\_prog1.erl}
+     {https://github.com/joearms/paradis\_jan\_2016/}
+
+has a 
 large number of errors.
 
 \VerbatimInput[frame=single]{./bad_prog1.erl}
@@ -52,7 +55,7 @@ module in an appropriate manner.
 
 \section{A bank account}
 
-The follow program implements a simple bank process, where the code
+The following program implements a simple bank process, where the code
 you have to write has been replaced by the atom \verb+implement_this+.
 
 Replace the \verb+implement_this+ atoms by correct code. 
@@ -116,6 +119,15 @@ In a later lecture I'll talk about catching exceptions, but for now all you need
 to know is that \verb+catch(F(X))+ traps errors occurring during the evaluation
 of \verb+F(X)+ converting them to error tuples of the form \verb+{'EXIT', Why}+
 which we match with the pattern \verb+{'EXIT', _}+.
+
+\section*{Notes}
+
+\href{https://github.com/joearms/paradis\_jan\_2016/blob/master/lectures/}
+     {https://github.com/joearms/paradis\_jan\_2016/blob/master/lectures/}
+     contains material referred to in the problems.
+     
+If you want to build the lectures locally you will need a working verison
+of erlang and pdflatex installed on your machine.
 
 \end{document}
 

@@ -83,7 +83,7 @@ $erl
 
 * Variables don't vary
 
-** \textcolor{Red}{Variable start with an uppercase letter} and are bound with =:
+** \textcolor{Red}{Variables start with an uppercase letter} and are bound with =:
 
 #+BEGIN_shell
 $erl
@@ -92,13 +92,14 @@ $erl
 10
 2> X = 20.
   exception error: 
-   no match of right hand side value 20
+  no match of right hand side value 20
 ...
 3> X1 = 20.
 20
 #+END_shell
 
 ** Use a new variable each time (more later)
+
 
 * Data Types
 Erlang has two types of data.
@@ -121,7 +122,8 @@ abc
 
 * Strings
 ** There are no strings in Erlang.
-** Strings are lists of integers:
+** Strings literals in programs are syntactic sugar (ie a different way of writing) for lists of integers:
+
 #+BEGIN_shell
 1> "abc".
 "abc".
@@ -129,6 +131,20 @@ abc
 [abc,97,98,99]
 #+END_shell
 
+
+* Strings (aside)
+
+** Strings are abstract data types which manipulate sequences of characters.
+** Characters are NOT bytes.
+** Files contain bytes.
+** The textual representation of programs contain string literals.
+** Character handling and string representation is a total mess in all programming languages and OS's.
+
+Stick to \verb+latin1+, \verb+ASCII+, \verb+Unicode+ and \verb+UTF8+
+and don't mix them.
+
+If you really want to know read the Unicode standard.
+ 
 * Primitive Data Types
 
 ** Atoms \verb+monday+ \verb+tuesday+ - \textcolor{Red}{Remember atoms start with a lower case letters}.
