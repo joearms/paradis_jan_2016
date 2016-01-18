@@ -351,7 +351,7 @@ func1(L) ->
 ** Cheat \verb+-compile(export_all).+
 * Assignments
 
-Fetch the files \verb_bad_code1.erl+ and \verb+bank.erl+
+Fetch the files \verb+bad_code1.erl+ and \verb+bank.erl+
 
 #+BEGIN_erlang
 -module(bad_prog1).
@@ -363,7 +363,7 @@ errors.
 
 \verb+bank.erl+ is a partially complete program. Fix it as described
 in the problem set description (hint: base your code on the
-code patterns you find in \verb+e1.erl+
+code patterns you find in \verb+e1.erl+)
 
 
 
