@@ -17,7 +17,7 @@ test_all() ->
     44 = perimeter({square,10}),
     // melting point of sulfur 
     {f,212} = temperatuer_convert({c,100}), 
-    24 = factorial(4),
+    120 = factorial(4),
     hooray.
 
 factorial(N) -> N*factorial(N-1)

@@ -29,6 +29,13 @@ incorrect programs. The program \verb+bad_prog1.erl+ in my github repository
 has a 
 large number of errors.
 
+Note: All programs you hand in should contain unit tests together with
+documentation and instructions on how to run the program. For
+v\"{a}lgodk\"{a}nd you should solve the sections mark advanced and
+your programs should be of production quality. This means, not only
+should the code be totally correct, it should also be well documented
+with no spelling errors and have good test coverage.
+
 \VerbatimInput[frame=single]{./bad_prog1.erl}
 
 Correct all the errors that you can find.  Write unit
@@ -40,8 +47,8 @@ compiler.
 
 Hint: Read the error messages - correct the first error and recompile
 before tackling the second error. Having fixed the first error the
-error messages that the compiler generates may change of subsequent
-recompilation.
+error messages that the compiler generates may change on subsequent
+recompilation (which is why it is good to fix one error at a time).
 
 As you get experienced look at only the line number in the error
 message then try to see the error in your code at this line without
@@ -74,7 +81,7 @@ Look at the code in \verb+e1.erl+ for inspiration.
 The previous bank account was for one person only. Implement a module
 \verb+multi_bank.erl+ that handles bank accounts for many
 people. You'll have to add an additional argument \verb+Who+ to all
-the fucntions in the API, so for example where \verb+bank.erl+ exports
+the functions in the API, so for example where \verb+bank.erl+ exports
 \verb+add(Pid, X)+ \verb+multi_bank.erl+ would have a function
 \verb+add(Pid, Who, X)+ where \verb+Who+ is a person name (for example, the
 atom \verb+joe+).
@@ -107,7 +114,7 @@ The line:
 \end{verbatim}
 
 will fail with a pattern matching error if \verb+fac(4)+ does not return  \verb+24+
-(which is the value of factorial 4.
+(which is the value of factorial 4).
 
 If we call \verb+fac(N)+ with an argument that is not an integer the function
 should raise an exception. We can test that it has throw an exception with a

@@ -82,7 +82,6 @@ $erl
 ** Emacs conventions apply in the shell.
 
 * Variables don't vary
-
 ** \textcolor{Red}{Variables start with an uppercase letter} and are bound with =:
 
 #+BEGIN_shell
@@ -100,6 +99,37 @@ $erl
 
 ** Use a new variable each time (more later)
 
+* How come we don't run out of variables (1)?
+#+BEGIN_erlang
+plus2(X) ->
+    X1 = X + 1,
+    X2 = X1 + 1,
+    X2.
+#+END_erlang
+#+BEGIN_shell
+> X = plus2(12).
+14
+#+END_shell
+
+** After \verb+foo()+ has returned the space for \verb+X1+ and \verb+X2+ is reclaimed by the garbage collector.
+
+* How come we don't run out of variables (2)?
+#+BEGIN_erlang
+loop(0, X) ->
+    X;
+loop(N, X) ->
+    X1 = X + 1,
+    X2 = X1 + 1,
+    loop(N-1, X2).
+#+END_erlang
+#+BEGIN_shell
+> X = loop(10000, 0).
+20000
+#+END_shell
+
+** We've created \verb+20000+ new variables but GC reclaims the space. 
+** As the program runs the space for \verb+X1+ and \verb+X2+ is reclaimed by the garbage collector.
+** Sometime the compiler is clever and GC is done at compile time.
 
 * Data Types
 Erlang has two types of data.
@@ -131,7 +161,6 @@ abc
 [abc,97,98,99]
 #+END_shell
 
-
 * Strings (aside)
 
 ** Strings are abstract data types which manipulate sequences of characters.
@@ -143,7 +172,7 @@ abc
 Stick to \verb+latin1+, \verb+ASCII+, \verb+Unicode+ and \verb+UTF8+
 and don't mix them.
 
-If you really want to know read the Unicode standard.
+** If you really want to know read the Unicode standard.
  
 * Primitive Data Types
 
@@ -280,7 +309,7 @@ function area(X){
 * Modules
 ** All code is defined in modules.
 ** Modules are the unit of compilation.
-** Modules can live-upgraded.
+** Modules can be live-upgraded.
 ** Modules limit the visibility of internal functions.
 * Structure of a Module
 ** Modules look like this:
