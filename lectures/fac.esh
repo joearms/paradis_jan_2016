@@ -1,0 +1,14 @@
+#!/usr/bin/env escript
+
+main(Args) ->
+    io:format("Script started with args:~p~n",[Args]),
+    [A] = Args,
+    N = list_to_integer(A),
+    K = fac(N),
+    io:format("fac(~p) = ~p~n",[K, N]).
+
+fac(0) ->
+    1;
+fac(N) ->
+    N * fac(N-1).
+

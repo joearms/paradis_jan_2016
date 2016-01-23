@@ -43,8 +43,8 @@ double(X) -> 2*X.
 fac(0) -> 1;
 fac(N) -> N*fac(N-1).    
 
-area({square,X}) -> X*X;
-area({rectangle,X,Y}) -> X*Y.
+area({rectangle,X,Y}) -> X*Y;
+area({square,X}) -> X*X.
 
 perimeter({square,X}) ->  4*X;
 perimeter({rectangle,X,Y}) -> 2*(X+Y).

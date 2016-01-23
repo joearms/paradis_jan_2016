@@ -1,13 +1,20 @@
 #+STARTUP: overview, hideblocks
 #+BEGIN_kv
 title: Modules and Functions
-subtitle: Lecture E2 
+subtitle: Lecture E3 
 author: Joe Armstrong
 copyright: \copyright 2016 -- Joe Armstrong
 email: joearms@gmail.com
 affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv
+* Topics
+** The startup file, paths.
+** Ways to run your program.
+** Expressions.
+** Higher order functions.
+** Von-Neumann Bottleneck.
+
 * The startup file
 
 ** The file {\sl hidden} file \verb+.erlang+ is consulted when you start Erlang.
@@ -58,11 +65,28 @@ $ runme arg1 ...
 #+BEGIN_erlang
 #!/usr/bin/env escript
 
-main(_) ->
-    ...
+main(Args) ->
+    io:format("Script started with args:~p~n",[Args]),
+    [A] = Args,
+    N = list_to_integer(A),
+    K = fac(N),
+    io:format("fac(~p) = ~p~n",[K, N]).
+
+fac(0) -> 1;
+fac(N) -> N * fac(N-1).
 #+END_erlang
-  
-** chmod the file then you can run it as a script.
+
+* chmod the file then you can run it as a script.
+
+#+BEGIN_shell
+$ chmod a+x fac.esh 
+$ ./fac.esh 123
+Script started with args:["123"]
+fac(1214630436702532967576624324188129585545421708848338
+23153289181618292358923621676688311569606126402021707358
+35221294047782591091570411651472186029519906261646730733
+907419814952960000000000000000000000000000) = 123
+#+END_shell
 
 * case expression
 #+BEGIN_erlang
@@ -97,14 +121,22 @@ weekend(Day) ->
 #+END_erlang   
   
 ** if is an \textcolor{red}{expression} and not an statement.
-* Funs
-** define own control abstractions:
-   
+* Higher Order Functions
+
+** Define own control abstractions.
+** Functions as arguments.
+** Function in Messages.
+** Functions that return functions.
+** Lamdba Abstractions.
+** Von Nuemann Bottleneck.
+
+* Fun Syntax
+Creating:
 #+BEGIN_erlang
-for(Max,Max,F) -> [F(Max)];
-for(I, Max, F) -> [F(I) | for(I+1,Max,F)].
+F = fun(X,Y,...) -> ... end
 #+END_erlang   
-   
+      
+Using:
 #+BEGIN_shell
 1> D = fun(X) -> 2*X end.
 #Fun<erl_eval.6.17052888>
@@ -112,6 +144,123 @@ for(I, Max, F) -> [F(I) | for(I+1,Max,F)].
 [2,4,6,8,10,12,14,16,18,20]
 3> 
 #+END_shell
+** To refer to a fun we can say \verb+fun NameOfFun/Arity+.
+
+* Functions as arguments
+
+#+BEGIN_erlang
+for(Max,Max,F) -> [F(Max)];
+for(I, Max, F) -> [F(I) | for(I+1,Max,F)].
+#+END_erlang   
+      
+#+BEGIN_shell
+1> D = fun(X) -> 2*X end.
+#Fun<erl_eval.6.17052888>
+2> hofs:for(1,10,D).
+[2,4,6,8,10,12,14,16,18,20]
+3> 
+#+END_shell
+
+* Function which return Funs
+#+BEGIN_erlang
+make_adder(Y) ->
+    fun(X) -> X + Y end.
+#+END_erlang
+
+#+BEGIN_shell
+> Adder10 = hofs:make_adder(10).
+#Fun<hofs.7.134015048>
+> Adder10(10).
+20
+#+END_shell
+
+
+* Funs capture variables in their environment
+#+BEGIN_erlang
+%% hofs.erl
+test2() ->
+    Y = 10,  
+    Adder = fun(X) -> X + Y end,
+    for(1,10,Adder).
+#+END_erlang
+
+* Funs retain captured variables after they have returned
+
+
+#+BEGIN_erlang
+test4() ->
+    Y = 10,
+    fun(X) -> X + Y end.
+#+END_erlang
+
+After \verb+test4+ has returned the value of the internal variable
+\verb+Y+ is still retained. {\sl This is called a closure and is
+incredably
+useful}.
+
+
+#+BEGIN_shell
+> F=hofs:test4().  
+#Fun<hofs.8.99099555>
+> F(10).
+20
+#+END_shell
+
+
+
+* Functions in messages
+#+BEGIN_erlang
+wait() ->
+    receive
+	F ->
+	    receive
+		{From, X} ->
+		    From ! {self(), F(X)}
+	    end
+    end.
+#+END_erlang
+
+
+* Pattern matching in Funcs
+#+BEGIN_shell
+    [1,2,1] = map(fun(a) -> 1;
+		     (b) -> 2
+		  end, [a,b,a]),
+#+END_shell
+
+* Self-reference in Funs
+#+BEGIN_shell
+[1,2,6] = map(fun Fac(0) -> 1;
+		  Fac(N) -> N * Fac(N-1)
+	      end, [1,2,3]),
+#+END_shell
+
+* Lambda abstraction
+** See the examples in \verb+lambda.erl+.
+
+* Von-Neumann Bottleneck
+
+** Word at-a-time programming:
+A single line of code describes what happens to one data item
+in this case a list cell:
+#+BEGIN_erlang
+double([]) -> [];
+double([H|T]) -> [2*H|double(T)].
+#+END_erlang
+
+** List at-a-time programming
+
+A single line of code describes what happens to a large number
+of data items:
+
+#+BEGIN_erlang
+double(fun(X) -> 2*X end, L).
+#+END_erlang
+
+The Von Neumann bottleneck is caused by the memory bandwidth problem.
+There is a large data memory, but the CPU memory has a very small
+number of registers through which all data must pass.
+
 
 * Simple list recursion
 #+BEGIN_erlang
@@ -248,7 +397,7 @@ the call to y (a lastcall) is compiled as
 * BIFS
 ** Do things that are impossible in erlang ( \verb+atom_to_list(abc)+).
 ** Do things that are slow in erlang ( \verb+lists:reverse/1+).
-** Look like erlang function calls
+** Look like erlang function calls.
 
 * Apply
   
@@ -320,36 +469,21 @@ birthday(X) ->
      X#person{age=Age+1}.
 #+END_erlang
 
-* Typed Records 1
-
-** We can add types to the fields.
-** Can be checked by the dialyzer.
-** Informative only:
-
-#+BEGIN_erlang
--record(person,
-   {firstname :: string(),
-    lastname :: string(),
-    footsize :: integer(),
-    age :: integer(),
-    ....}).
-#+END_erlang
-
-** What's wrong with this?
-  
-* Typed Records 2
-
-#+BEGIN_erlang
--type months() :: integer().
-
--record(person,
-   {firstname :: string(),
-    lastname :: string(),
-    footsize :: integer(),
-    age :: months(),
-    ....}).
-#+END_erlang
-  
+* Maps
+#+BEGIN_shell
+1> X = #{first => "Rip", age => 2345}.  %% create
+#{age => 2345,first => "Rip"}
+2> #{age := A} = X.          %% match
+#{age => 2345,first => "Rip"}
+3> A.
+2345
+4> X1 = X#{age := 222}.   %% update existing key
+#{age => 222,first => "Rip"}
+5> X2 = X#{sex := mail}.   %% update new key fails
+** exception error: {badkey,sex}
+6> X2 = X#{sex => mail}.   %% update new key works
+#{age => 2345,first => "Rip",sex => mail}
+#+END_shell 
 * Catch
 #+BEGIN_shell
 1> X = atom_to_list(1).

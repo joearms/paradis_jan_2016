@@ -1,0 +1,111 @@
+\documentclass[12pt]{hitec}
+
+\usepackage{fancyvrb}
+%%\usepackage{hyperref}
+
+\title{Problem set 2}
+\author{Joe Armstrong}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+
+\section{Problems}
+
+Implement the functions described below. Choose suitable module names
+for your functions. Add unit tests and documentation to the modules.
+
+For v\"{a}lgodk\"{a}nd you should solve the sections mark advanced and
+your programs should be of production quality. This means, not only
+should the code be totally correct, it should also be well documented
+with no spelling errors and have good test coverage.
+
+
+\subsection{is\_prime(N)}
+
+Write a function \verb+is_prime(N)+ which returns \verb+true+ if
+\verb+N+ is a prime number otherwise \verb+false+. Assume that
+\verb+N+ $<=$ 10,000.
+
+\subsection{seq(N)}
+Write a function \verb+seq(N)+ which returns a list of integers from
+$1$ to $N$
+
+\subsection{filter(F, L)}
+
+Write a function \verb+filter(F, L)+ which returns all elements $X$ in
+the list $L$ for which $F(X)$ is \verb+true+.
+
+\subsection {all\_primes(N)}
+
+Write a function \verb+all_primes(N)+ which returns
+all primes $<= N$ using the functions \verb+seq/1+,
+\verb+is_prime/1+ and \verb+filter/2+ that you have written earlier.
+
+
+\subsection{rotate(N, L)}
+
+\verb+rotate(1, L)+ rotates the list \verb+N+ by one place.
+For example a one place rotation of the list \verb+[a,b,c,d,e,f]+ is the list
+\verb+[b,c,d,e,f,a]+. The element at the head of the list \verb+a+ is moved
+to the end of the list.
+
+\verb+rotate(N, L)+ for positive \verb+N+ performs a one place rotation \verb+N+ times.
+
+\verb+rotate(-1,L)+ rotates the list in the opposite direction and moves the
+last element of the list to the beginning 
+so  \verb+rotate(-1, [a,b,c,d,e,f])+ is the list
+\verb+[f,a,b,c,d,e]+.
+
+\verb+rotate(N, L)+ for negative \verb+N+ performs \verb+rotate(-1, L)+ \verb+N+ times.
+
+Implement the function \verb+rotate(N, L)+ write unit test cases for the
+function. Write some test cases extremely large values
+of \verb+N+ (greater than $10^{20}$).
+
+\section{Arithmetic evaluator}
+
+Assume that the parse trees of
+arithmetic expressions are represented as follows:
+
+\begin{itemize}
+\item \verb=A + B= is represented as the tuple \verb+{plus,A,B}+
+\item \verb=A - B= is represented as the tuple \verb+{minus,A,B}+
+\item \verb=A * B= is represented as the tuple \verb+{times,A,B}+
+\item \verb=A / B= is represented as the tuple \verb+{divide,A,B}+
+\item \verb+N+ is represented by itself if \verb+N+ is an integer or float.
+\end{itemize}
+
+Write an expression evaluator \verb+eva(E)+ that returns the value of a arithmetic
+expression represented as a parse tree \verb+E+.
+
+For example:
+\verb+eval({plus,3,4})+ should return \verb+7+ and
+\\
+\verb+eval({times,{plus,2,3},{minus,3,4}})+ should return \verb+-5+.
+
+\section{Advanced}
+Write a function \verb+safe_eval(X)+ which returns \verb+{ok, Val}+
+if \verb+X+ is an arithmetic expression whose value is \verb+Val+ according
+to the rules in the previous section, and whose value is \verb+{error,Why}+
+is the \verb+X+ does not represent a valid expression and \verb+Why+
+is a term describing the error.
+
+A non valid expression is one where the parse tree is incorrect, or
+might trigger a divide by zero exception. So for, example
+\verb+{plus,12,monday}+ is an invalid expression (according to the rules
+above) and
+\\
+\verb+{plus,12,{divide,12,0}}+ is an invalid expression
+since it would cause a divide by zero exception when evaluated.
+
+Write a process which is sent messages containing parsed arithmetic expressions and returns
+messages containing the result of the evaluation.
+
+Make sure your process does not crash if it is sent invalid messages.
+
+\end{document}

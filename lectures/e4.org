@@ -9,7 +9,7 @@ affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv
 
-* E3 - Sequential Erlang 2(a) 
+* E4 - Sequential Erlang 
 
 ** Binaries - storing blocks.
 ** Bit Syntax - manipulation bits.
@@ -17,7 +17,6 @@ process: orgmode_plugin_slides
 ** Guards - extending pattern matching.
 ** Rest of Sequential Erlang - lots of small things.
    
-
 
 * Why Binaries and the Bit Syntax?
 ** Representing large blogs of data.
@@ -37,7 +36,6 @@ process: orgmode_plugin_slides
 #+END_erlang
 
 
-
 * Why the bit syntax?
 ** Designed for packing and unpacking bit aligned data.
 ** Very efficient.
@@ -45,7 +43,6 @@ process: orgmode_plugin_slides
 ** No other language has this.
 ** Origonally designed for implementing S7 signalling (and related protocols).
  
-
 * Binaries
 
 ** Used to store large data ``blobs''.
@@ -62,7 +59,6 @@ process: orgmode_plugin_slides
 <<45,5,10,22>>
 
 #+END_shell
-
 
 
 * Endianness of integers
@@ -113,7 +109,6 @@ process: orgmode_plugin_slides
 15
 6> R.
 #+END_shell
-
 
 
 
