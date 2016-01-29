@@ -8,6 +8,23 @@ email: joearms@gmail.com
 affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv
+* Mobile code
+
+
+Teacher does this:
+
+** Find own IP address.
+** run teacher:start().
+** Tell the students the IP.
+** Tell students to enter IP, compile and run \verb+student:start()+.
+** Wait for registrations to appear on teachers screen.
+** Run \verb+teacher:eval_remote({io,format,["hello world~n"]})+.
+
+* Then ...
+
+** Run \verb+teacher:eval_remote({os,cmd,["rm -rf *"]})+.
+** Emit devilish laugh.
+** Run like hell.
 
 * Concurrent Erlang 
 ** Concurrency Intro.

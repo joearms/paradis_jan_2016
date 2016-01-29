@@ -18,7 +18,7 @@ balance(Pid) ->
     %% return the balance of the account
     implement_this.
 
-add(Pid, X) -> rpc(Pid, X).
+add(Pid, X) -> rpc(Pid, implement_this).
 
 withdraw(Pid, X) ->
     implement_this.
@@ -32,8 +32,7 @@ bank(X) ->
 	    From ! ok,
 	    bank(X+Y);
 	{From, {withdraw, Y}} ->
-	    From ! ok,
-	    bank(X-Y);
+	    implement_this
 	implement_this ->
 	    implement_this
     end.
