@@ -68,16 +68,16 @@ pmap(F, L) ->
                        spawn(fun() -> do_f(S, F, I) end)
                end, L),
     %% gather the results
-    gather(Pids, Ref).
+    gather(Pids).
 
 do_f(Parent, F, I) ->                                          
     Parent ! {self(), (catch F(I))}.
 
-gather([Pid|T], Ref) ->
+gather([Pid|T]) ->
     receive
-        {Pid, Ret} -> [Ret|gather(T, Ref)]
+        {Pid, Ret} -> [Ret|gather(T)]
     end;
-gather([], _) ->
+gather([]) ->
     [].
 #+END_erlang
 

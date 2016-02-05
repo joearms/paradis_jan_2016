@@ -1,0 +1,149 @@
+\documentclass[12pt]{hitec}
+
+\usepackage{fancyvrb}
+%% \usepackage{hyperref}
+
+\title{Assigments week 4}
+\author{Joe Armstrong}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+These problems are for lectures E7 and E8.
+
+\section{Problems}
+
+The problems into two categories:
+
+\begin{itemize}
+\item {\bf normal} solve these to get {\sl Godk\"{a}nd}.
+\item {\bf advanced} solve these to get {\sl V\"{a}l Godk\"{a}nd}.
+\end{itemize}
+
+The sections and subsections in this paper are marked appropriately.
+
+\section{Introduction}
+
+This week we'll make a complete program, sewing all the bits we're learned together.
+We'll make a file sharing program, similar to {\sl bit torrent}, though far simpler.
+
+Before we do the exercises I should explain in general terms how bit torrent works.
+
+\section*{How Bit Torrent Works}
+
+Bit Torrent works by having three different programs and three different protocols.
+
+\begin{itemize}
+
+\item The {\bf Tracker} keeps  track of of a number of peers. A peer can offer a file
+  meaning that it has the file and will allow other peers to obtain a copy of the file.
+\item A {\bf Peer} is a program that either offers a file or wants a file
+\item An {\bf Index} where files and their MD5 checksums are published.
+  
+\end{itemize}
+
+Three protocols are involved:
+
+\begin{itemize}
+  
+\item {\sl The Peer - Tracker protocol}. This protocol has two messages:
+  \begin{itemize}
+
+  \item
+    The peer can send an \verb+{i_am_interested_in, Md5}+ message to
+    the tracker.  This means that the peer is interested in the file
+    whoes MD5 checksum is \verb+Md5+ Interested means it has parts of
+    the file and wants to share them, or has non of the file.  The
+    Tracker should store the IP address and Port of the peer
+    concerned.
+
+  \item A peer can send a \verb+{who_is_interested,Md5}+ message to the
+    server. The server will reply to this with the address of the
+    machines who are interested in the file.
+
+  \end{itemize}
+
+\item {\sl The Peer - Peer protocol}. This protocol has two messages:
+
+  \verb+{what_have_you, Md5}+ Is a message sent by one peer to another, asking
+  about the file it wants to obtain. The reply is a message,
+  \verb+{i_have,[{Start,Stop}]}+ containing tuples
+  describing which parts of the file the peer has.
+  
+  \verb+{send_me,MD5,Start,Stop}+ the peer who wants a file sends a
+  messaging asking for part of the file with checksum \verb+Md5+.
+  The receiving client send the part of the file concerned;
+
+\item {\sl The Peer - Index Protocol} - so far the Tracker knows
+  nothing about the file being tracked, only the MD5
+  checksum. Somewhere we need to keep an index of the File names and
+  their corresponding MD5 checksums and sizes. This is the job of the
+  index.
+
+  A peer that want to share a file computes the \verb+Md5+ checksum of the file
+  and sends a \verb+{add_to_index, FileName, Md5, Size}+ message to the index,
+  and a \verb+{i_have, Md5}+ message to the tracker.
+
+  The index publishes a list of all files it knows about together with the
+  MD5 checksums of the files and the file sizes. This is what the Pirate Bay did.
+  
+\end{itemize}
+
+\section{Normal: A Basic Server}
+
+Write three programs \verb+tracker.erl+, \verb+index.erl+ and \verb+peer.erl+
+which implement a complete Bit-torrent like system. Run this in a single Erlang node.
+
+Write the tracker and and index programs as \verb+gen_sever+ plugins.
+
+Write some test routine to see that everything works, and documentation.
+
+To simplify the problem assume the files are small and that the entire file
+can be transferred in one message.
+
+\section{Advanced: Parallel Transfer}
+
+A Peer can discover that the file they are interest in can be hosted
+by more than one other Peers. Your program can be made more robust and
+faster by requesting different parts of the file in parallel.
+
+Implement this.
+
+\section{Advanced: An TCP Server}
+
+In the previous section you implemented the system on one node using
+Erlang messages.  Modify the code to use TCP as the transport
+medium. Note: in the first section to notion of an ``address'' could
+be interpreted as meaning ``A process Identifier'' - for this section
+we interpreted an address as meaning ``Ad IP adress and Port''.
+
+
+\section*{Note}
+
+The real bit torrent is more complicated than this, and uses a ``tit
+for tat'' algorithm.  A peer that has the entire file is called {\sl a
+  seed} - peers that do not have the entire file are discouraged from
+downloding from the seed, but encouraged to find another peer and get
+the data from them instead of bothering the seed. This is on a basis
+of trust. Peers that send you data are rewarded by you sending them
+data, and so on.
+
+In our problems the entire file has a checksum - but if we request a
+smaller fragment of the file there is no checksum for the fragment so
+we will only discover if the file is corrupt after obtaining all the
+fragments.
+
+In the real Bit Torrent a file is represented by a list of checksums
+\verb+[Md51, Md52, Md53, ....]+ which are the checksums of the 1'st MB
+block, the 2'md MB block and so on\footnote{It's not actuall 1 MByte - the
+  size varies depending upon the total size of the file}.  A file containing a list of
+checksums\footnote{And a few other things, like the total size of the file ...}
+is called {\sl a torrent} and the checksum of the file
+containing a list of torrents is the torrent identifier.
+
+\end{document}
+
