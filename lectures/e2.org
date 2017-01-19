@@ -254,7 +254,70 @@ a
 2
 #+END_shell
 
-* Patterns
+* Patterns are awesome
+
+* Area with pattern matching
+#+BEGIN_erlang
+area({rectangle, Width, Height}) -> Width * Height;
+area({circle, Radius})           -> 3.14159 * Radius * Radius;
+area({square, Side})             -> Side * Side.
+#+END_erlang
+
+* Area in C
+#+BEGIN_shell
+
+enum ShapeType { Rectangle, Circle, Square };
+struct Shape {
+  enum ShapeType kind; 
+  union {
+      struct { int width, height; } rectangleData;
+      struct { int radius; }        circleData;
+      struct { int side;}           squareData;
+  } shapeData;
+};
+
+double area(struct Shape* s) { 
+   if( s->kind == Rectangle ) {
+      int width, ht;
+      width = s->shapeData.rectangleData.width; 
+      ht = s->shapeData.rectangleData.height; 
+      return width * ht;
+   } else if ( s->kind == Circle ) { 
+   ...
+#+END_shell
+
+* Area in Java
+\begin{Verbatim}[fontsize=\small,frame=single]
+abstract class Shape { 
+    abstract double area();
+}
+
+class Circle extends Shape {
+   final double radius;
+   Circle(double radius) { this.radius = radius; } 
+   double area() { return Math.PI * radius*radius; }
+}
+
+class Rectangle extends Shape { 
+   final double ht;
+   final double width;
+   Rectangle(double width, double height) { 
+     this.ht = height;
+     this.width = width;
+   }
+   double area() { return width * ht; } 
+}
+
+class Square extends Shape { 
+   final double side;
+   Square(double side) { 
+     this.side = side;
+   }
+   double area() { return side * side; } 
+}
+\end{Verbatim}
+
+* Terms and Patterns
 
 ** A ``Term'' is an atomic or compound data value.
 ** A ``Pattern'' is a data value or a variable.
