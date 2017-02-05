@@ -81,13 +81,18 @@ arithmetic expressions are represented as follows:
 \item \verb+N+ is represented by itself if \verb+N+ is an integer or float.
 \end{itemize}
 
-Write an expression evaluator \verb+eva(E)+ that returns the value of a arithmetic
-expression represented as a parse tree \verb+E+.
+Write an expression evaluator \verb+eval(E)+ that returns the value of a arithmetic
+expression represented as a parse tree \verb+E+. \verb+{divide,A,B}+ should
+perform floating point division.
 
 For example:
 \verb+eval({plus,3,4})+ should return \verb+7+ and
 \\
 \verb+eval({times,{plus,2,3},{minus,3,4}})+ should return \verb+-5+.
+\\
+\verb+eval({divide,12,3})+ should return \verb+4.0+ and not \verb+4+.
+
+
 
 \section{Advanced}
 Write a function \verb+safe_eval(X)+ which returns \verb+{ok, Val}+
