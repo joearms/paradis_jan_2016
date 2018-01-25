@@ -1,15 +1,15 @@
 #+STARTUP: overview, hideblocks
 #+BEGIN_kv
-title: Concurrent and Distributed Erlang 
+title: Errors and Distributed Programming 
 subtitle: Lecture E6 
 author: Joe Armstrong
-copyright: \copyright 2016 -- Joe Armstrong
+copyright: \copyright 2017 -- Joe Armstrong
 email: joearms@gmail.com
 affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv
 
-* Error and Distributed Programming 
+* Errors and Distributed Programming 
 ** Chapters 13,14. 
 ** Links.
 ** Monitors.

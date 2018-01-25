@@ -61,7 +61,7 @@ Start the monitor process. Send the double process something that causes it
 to crash. Then check that a new double process has been created and that
 the system has recovered from the error.
 
-\section{normal: Reliable Client-Server}
+\section{advanced: Reliable Client-Server}
 
 Here we assume that the server might crash. If a client sends a message to
 and does not get a reply (this is detected by a timeout) the client
@@ -109,7 +109,7 @@ sleep(T) ->
 list of items \verb+L+  can be defined as follows:
 
 \begin{Verbatim}
-smap(_, [])    -> []
+smap(_, [])    -> [];
 smap(F, [H|T]) -> [F(H) | smap(F, T)].
 \end{Verbatim}
 
@@ -117,20 +117,20 @@ A parallel version \verb+pmap(F,L)+ can be written as follows:
 \begin{Verbatim}
 pmap(F, L) -> 
     S = self(),
-    Pids = map(fun(I) -> 
+    Pids = smap(fun(I) -> 
                        spawn(fun() -> do_f(S, F, I) end)
                end, L),
     %% gather the results
-    gather(Pids, Ref).
+    gather(Pids).
 
 do_f(Parent, F, I) ->                                          
     Parent ! {self(), (catch F(I))}.
 
-gather([Pid|T], Ref) ->
+gather([Pid|T]) ->
     receive
-        {Pid, Ret} -> [Ret|gather(T, Ref)]
+        {Pid, Ret} -> [Ret|gather(T)]
     end;
-gather([], _) ->
+gather([]) ->
     [].
 \end{Verbatim}
 
@@ -258,7 +258,7 @@ reasonably large values of \verb+N+ and \verb+M+. The product
 of \verb+N*M+ should be a few million. Try this for tens of thousands to
 millions of processes. Experiment with the \verb+erl -smp disable+.
 
-\section{normal: A Mail Server}
+\section{optional: A Mail Server}
 
 Write a simple mail server. The server should respond to 4 messages:
 
@@ -327,8 +327,7 @@ Write a simple mail server. The server should respond to 4 messages:
   
   \begin{itemize}
   
-  \item \verb+error+ -- the mail Id does not exist or the password is incorrect+
-    
+  \item \verb+error+ -- the mail Id does not exist or the password is incorrect.
   \item \verb+{deleted, MailId}+ the mail was deleted.
     
   \end{itemize}
