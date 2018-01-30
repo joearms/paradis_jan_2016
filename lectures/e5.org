@@ -16,7 +16,7 @@ Teacher does this:
 ** Find own IP address.
 ** run teacher:start().
 ** Tell the students the IP.
-** Tell students to enter IP, compile and run \verb+student:start()+.
+** Tell students to edit student.erl() and run \verb+student:start()+.
 ** Wait for registrations to appear on teachers screen.
 ** Run \verb+teacher:eval_remote({io,format,["hello world~n"]})+.
 

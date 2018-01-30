@@ -4,13 +4,19 @@
 %% to start
 %%  student:start().
 
-%% edit if necessary
+%% edit your_name()  to your name
+%% edit teacher_ip() to the adress the teacher gave you
 
-my_name() -> "joe:" ++ lists:flatten(io_lib:format("~p",[time()])).
+student_name() -> "joe:".
     
-teacher_ip() -> "localhost".
-teacher_port() -> 4567.
+teacher_ip() -> "130.237.89.81".
 
+
+
+my_name() -> student_name() ++ lists:flatten(io_lib:format("~p",[time()])).
+
+
+teacher_port() -> 4567.
 
 start() ->
     {ok, Socket} = gen_udp:open(0, [binary]),
