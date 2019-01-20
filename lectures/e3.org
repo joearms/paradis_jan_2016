@@ -3,7 +3,7 @@
 title: Modules and Functions
 subtitle: Lecture E3 
 author: Joe Armstrong
-copyright: \copyright 2016 -- Joe Armstrong
+copyright: \copyright 2016 - 2019 -- Joe Armstrong
 email: joearms@gmail.com
 affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides

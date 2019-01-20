@@ -3,8 +3,8 @@
 title: Binaries, the Bit sytax, Files, and BIFS
 subtitle: Lecture E4 
 author: Joe Armstrong
-copyright: \copyright 2016 -- Joe Armstrong
-email: joe.armstrong@ericsson.com, joearms@gmail.com
+copyright: \copyright 2016 - 2019 -- Joe Armstrong
+email: joearms@gmail.com
 affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv

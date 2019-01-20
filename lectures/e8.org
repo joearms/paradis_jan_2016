@@ -3,9 +3,9 @@
 title: Interfacing - Sockets TCP/UDP
 subtitle: Lecture E7 
 author: Joe Armstrong
-copyright: \copyright 2016 -- Joe Armstrong
+copyright: \copyright 2016 - 2019 -- Joe Armstrong
 email: joearms@gmail.com
-affiliation: KTH, Whoomph Software
+affiliation: KTH, Whoomph Software AB
 process: orgmode_plugin_slides
 #+END_kv
 

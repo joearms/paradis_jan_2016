@@ -1,0 +1,108 @@
+#+STARTUP: overview, hideblocks
+#+BEGIN_kv
+title: Erlang Course Schedule 
+subtitle: Lecture E0 
+author: Joe Armstrong
+copyright: \copyright 2014 - 2019 -- Joe Armstrong
+email: joearms@gmail.com
+affiliation: Whoomph Software AB
+process: orgmode_plugin_slides
+#+END_kv
+
+* About
+
+** Assignments and other material are at \url{https://github.com/joearms/paradis_jan_2016
+}
+** PDF files and assignments are at the course site on ilearn2
+** It's a GIT repository. Please push changes to me. {\sl help me improve the course better}.
+   
+* Why?
+** Erlang is Great
+** Erlang powers a lot of things
+(WhatsApp, Ericsson smart data ..., Alibab, and secret stuff :-)
+** Elixir is great
+** Programming is fun
+** Best paid josbs in Silicon valley :-)
+* How?
+** Make lots of Mistakes
+
+"If you don't fail at least 90 percent of the time, you're not aiming
+high enough." -- Alan Kay
+
+** Come to the lectures
+
+Don't watch the vidoes
+
+** Lot's of live coding
+See me make really stupid mistakes :-)
+
+** Lot's of war stories
+How we got banned - how I was fired - how I made my first million etc.
+
+* Warnings :-)
+
+** I use the Chomsky method
+(to teach X never talk about X talk about Y)
+** I might get sick
+(don't Google thigs if you get sick)
+** I will go heavily off topic (remind me)
+** I'll try to cover things in "weekly" slots
+** I might talk about the TiddlyWiki
+   (I will talk about it after class)
+
+
+
+* Schedule
+** Week 4 E1 - E2
+** Week 5 E3 - E4
+** Week 6 E5 - E6
+** Week 7 E7 - E8
+* Week 4 E1 - E2
+** Sequential Erlang
+** The shell
+** Compilation Modules, Functions
+** Problems \#1
+* Week 5 E3 - E4
+** Binaries
+** the awesomeness of the Bit syntax
+** The awesomeness of Term to Binary
+** BIFS
+** Types
+** Type checking
+** Compiling 
+** Makefiles
+
+** Problems \#2
+* Week 6 E5 - E6
+** Concurrency
+** Client server
+** Distributed programming
+** Errors
+** Problems \#3
+* Week 7 E7 - E8
+** Sockets
+** Files
+** UDP and  TCP
+** Websockets
+
+** Problems \#4
+* Help me improve the course
+** We start with a emacs org-mode, this file is \verb+e0.org+.
+** An Erlang program \verb+orgmode_parse.erl+ transforms it into \verb+lecture_e0.tex+. This adds color coding of code and a few other nice things.
+** Run \verb+pdflatex+ twice and get \verb+lecture_e0.pdf+.
+** This course is being continuously updated and is possibly buggy.
+** Please help me improve the material. Push all changes to github.
+** There are no course credits for helping.
+** \textcolor{Red}{Tell me if the examples are too easy or difficult}. They should take N hours/week. What is N?
+* Tell them how wonderful make is
+** some student will do this
+* Building the Course Material
+#+BEGIN_shell
+$ git clone https://github.com/joearms/paradis
+$ cd paradis/
+$ autoconf
+$ ./configure
+$ make
+#+END_shell
+
+Problem 1 - fix Makefile.in or configure.ac to reduce output from pdflatex.
